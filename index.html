@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Focus 2 • Unit 6: Just the Job! — Interactive Lab (Grade 10)</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <!-- html2pdf.js for clean client-side PDF generation with full Cyrillic + Latin support -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-light: #ccfbf1;
+      --accent: #f97316;
+      --accent-light: #ffedd5;
+      --navy: #0f172a;
+      --slate: #475569;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --error: #dc2626;
+      --error-bg: #fee2e2;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--navy);
+      line-height: 1.55;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    h1, h2, h3, .brand-font {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Header */
+    .topbar {
+      background: linear-gradient(135deg, var(--navy) 0%, #1e293b 100%);
+      color: #fff;
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .topbar-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge-unit {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .student-pill {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.12);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .student-pill.visible {
+      display: flex;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 16px;
+    }
+
+    /* Registration Screen */
+    .hero-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-top: 10px;
+    }
+
+    .hero-banner {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      display: block;
+      background: #e2e8f0;
+    }
+
+    .hero-body {
+      padding: 28px 24px;
+    }
+
+    .hero-title {
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .hero-sub {
+      color: var(--slate);
+      font-size: 0.98rem;
+      margin-bottom: 24px;
+    }
+
+    .reg-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .reg-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-body {
+        padding: 20px 16px;
+      }
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+      color: var(--navy);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 13px 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--navy);
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 22px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.12s, background-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.28);
+    }
+
+    .btn-accent:hover {
+      background: #ea580c;
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--navy);
+      border: 2px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    /* Progress & Navigation Tabs */
+    .app-workspace {
+      display: none;
+    }
+
+    .app-workspace.active {
+      display: block;
+    }
+
+    .progress-header {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .progress-bar-bg {
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), #14b8a6);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .tabs-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 680px) {
+      .tabs-nav {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .tab-btn {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 10px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .tab-btn.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .tab-btn.completed {
+      border-color: var(--success);
+    }
+
+    .tab-num {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+
+    .tab-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--navy);
+    }
+
+    .tab-score {
+      font-size: 0.78rem;
+      color: var(--slate);
+      font-weight: 600;
+    }
+
+    /* Task Cards */
+    .task-panel {
+      display: none;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.25s ease;
+    }
+
+    .task-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .task-panel {
+        padding: 18px 14px;
+      }
+    }
+
+    .task-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .task-tag {
+      display: inline-block;
+      background: var(--accent-light);
+      color: #c2410c;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+
+    .attempt-badge {
+      background: #f1f5f9;
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    /* Drag & Drop (Touch + Mouse Friendly) */
+    .dnd-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px;
+      background: #f1f5f9;
+      border-radius: 14px;
+      border: 2px dashed #cbd5e1;
+      min-height: 64px;
+      margin-bottom: 20px;
+    }
+
+    .drag-chip {
+      background: #fff;
+      border: 2px solid var(--primary);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 9px 14px;
+      border-radius: 10px;
+      cursor: grab;
+      user-select: none;
+      touch-action: manipulation;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+      transition: transform 0.15s, background-color 0.15s, border-color 0.15s;
+    }
+
+    .drag-chip:active {
+      cursor: grabbing;
+    }
+
+    .drag-chip.selected-chip {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      transform: scale(1.04);
+      box-shadow: 0 6px 14px rgba(249, 115, 22, 0.35);
+    }
+
+    .dnd-zones {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 760px) {
+      .dnd-zones {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .drop-zone {
+      background: #f8fafc;
+      border: 2px dashed #94a3b8;
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 170px;
+      transition: background-color 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .drop-zone.drag-over {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    .drop-zone-title {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--primary-dark);
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .zone-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .chip-correct {
+      background: var(--success-bg) !important;
+      border-color: var(--success) !important;
+      color: #14532d !important;
+    }
+
+    .chip-wrong {
+      background: var(--error-bg) !important;
+      border-color: var(--error) !important;
+      color: #7f1d1d !important;
+    }
+
+    /* Task 2: Sentence Builder / Gap Fill Drag-n-Drop */
+    .gap-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .gap-row {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+
+    .gap-slot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 145px;
+      min-height: 36px;
+      padding: 2px 12px;
+      margin: 0 4px;
+      border: 2px dashed var(--primary);
+      border-radius: 8px;
+      background: #fff;
+      font-weight: 700;
+      color: var(--primary-dark);
+      vertical-align: middle;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .gap-slot.filled {
+      border-style: solid;
+      background: var(--primary-light);
+    }
+
+    .gap-slot.slot-correct {
+      background: var(--success-bg);
+      border-color: var(--success);
+      color: #14532d;
+    }
+
+    .gap-slot.slot-wrong {
+      background: var(--error-bg);
+      border-color: var(--error);
+      color: #7f1d1d;
+    }
+
+    /* Task 3: HR Job Interview Simulation */
+    .sim-chat-box {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .hr-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+
+    .hr-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .sim-stage-indicator {
+      font-size: 0.78rem;
+      color: #5eead4;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sim-dialogue {
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 1rem;
+      border-left: 4px solid var(--accent);
+    }
+
+    .sim-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sim-option-btn {
+      text-align: left;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 13px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .sim-option-btn:hover {
+      background: rgba(20, 184, 166, 0.22);
+      border-color: #2dd4bf;
+    }
+
+    .sim-feedback {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    /* Task 4: Prepositions & Confusing Words (job vs work) */
+    .quiz-item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .quiz-q {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .quiz-opts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill-radio {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 2px solid var(--border);
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .pill-radio.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .pill-radio.correct-opt {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+
+    .pill-radio.wrong-opt {
+      background: var(--error);
+      border-color: var(--error);
+      color: #fff;
+    }
+
+    /* Feedback Banner */
+    .feedback-box {
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+      font-weight: 600;
+      font-size: 0.94rem;
+      display: none;
+    }
+
+    .feedback-box.success {
+      display: block;
+      background: var(--success-bg);
+      color: #14532d;
+      border: 1px solid #86efac;
+    }
+
+    .feedback-box.warning {
+      display: block;
+      background: #fef3c7;
+      color: #78350f;
+      border: 1px solid #fcd34d;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    /* Final Report & PDF Section */
+    .report-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 2px solid var(--primary);
+      box-shadow: var(--shadow);
+      margin-top: 24px;
+    }
+
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    @media (max-width: 600px) {
+      .summary-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .stat-lbl {
+      font-size: 0.8rem;
+      color: var(--slate);
+      font-weight: 600;
+    }
+
+    .history-table-wrap {
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .helper-hint {
+      font-size: 0.84rem;
+      color: var(--slate);
+      background: #f1f5f9;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    /* Hidden printable PDF template styling */
+    #pdf-export-sheet {
+      background: #ffffff;
+      color: #0f172a;
+      padding: 28px;
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="badge-unit">Focus 2 • Unit 6</span>
+        <strong class="brand-font" style="font-size:1.05rem;">Just the Job! Interactive Lab</strong>
+      </div>
+      <div id="studentPill" class="student-pill">
+        <span id="pillName">Учень</span> • <span id="pillClass" style="color:#5eead4;">10-А</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- STEP 1: REGISTRATION SCREEN -->
+    <section id="registrationSection" class="hero-card">
+      <img src="assets/hero-work.jpg" alt="Grade 10 Careers & World of Work Illustration" class="hero-banner" />
+      <div class="hero-body">
+        <span class="task-tag">10 клас • Програма НУШ / Підручник Focus 2 (Unit 6: Work)</span>
+        <h1 class="hero-title">Інтерактивний тренажер: Світ професій та кар'єри</h1>
+        <p class="hero-sub">
+          Виконуй інтерактивні завдання з лексики, граматики (<em>Second Conditional</em>), прийменників та пройди реальну симуляцію співбесіди на роботу. Усі твої спроби та проміжні результати фіксуються для фінального PDF-звіту.
+        </p>
+
+        <form id="regForm">
+          <div class="reg-grid">
+            <div class="form-group">
+              <label for="studentName">Прізвище та ім'я учня *</label>
+              <input type="text" id="studentName" class="form-control" placeholder="Наприклад: Коваленко Софія" required minlength="2" />
+            </div>
+            <div class="form-group">
+              <label for="studentClass">Обери свій клас *</label>
+              <select id="studentClass" class="form-control" required>
+                <option value="" disabled selected>-- Обери клас (10-А ... 10-К) --</option>
+                <option value="10-А">10-А</option>
+                <option value="10-Б">10-Б</option>
+                <option value="10-В">10-В</option>
+                <option value="10-Г">10-Г</option>
+                <option value="10-Д">10-Д</option>
+                <option value="10-Ж">10-Ж</option>
+                <option value="10-К">10-К</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            Розпочати виконання завдань →
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- STEP 2: INTERACTIVE WORKSPACE -->
+    <section id="workspaceSection" class="app-workspace">
+      <!-- Overall Progress -->
+      <div class="progress-header">
+        <div class="progress-top">
+          <span>Загальний прогрес модуля</span>
+          <span id="overallScoreText">0 / 24 балів (0%)</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="overallProgressBar" class="progress-bar-fill"></div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="tabs-nav" aria-label="Task Navigation">
+        <button type="button" class="tab-btn active" data-tab="0" onclick="switchTab(0)">
+          <span class="tab-num">Завдання 1 • Drag & Drop</span>
+          <span class="tab-title">Work Vocabulary</span>
+          <span class="tab-score" id="tabScore0">Спроб: 0 • 0/9</span>
+        </button>
+        <button type="button" class="tab-btn" data-tab="1" onclick="switchTab(1)">
+          <span class="tab-num">Завдання 2 • Drag & Drop</span>
+          <span class="tab-title">Second Conditional</span>
+          <span class="tab-score" id="tabScore1">Спроб: 0 • 0/5</span>
+        </button>
+        <button type="button" class="tab-btn" data-tab="2" onclick="switchTab(2)">
+          <span class="tab-num">Завдання 3 • Симуляція</span>
+          <span class="tab-title">Job Interview</span>
+          <span class="tab-score" id="tabScore2">Спроб: 0 • 0/5</span>
+        </button>
+        <button type="button" class="tab-btn" data-tab="3" onclick="switchTab(3)">
+          <span class="tab-num">Завдання 4 • Focus Check</span>
+          <span class="tab-title">Job vs Work & Preps</span>
+          <span class="tab-score" id="tabScore3">Спроб: 0 • 0/5</span>
+        </button>
+      </nav>
+
+      <!-- TASK 1: DRAG & DROP VOCABULARY SORTING -->
+      <article id="panel0" class="task-panel active">
+        <div class="task-header">
+          <div>
+            <span class="task-tag">Focus 2 • Unit 6.1 Vocabulary</span>
+            <h2>1. Розподіли лексику за категоріями (Drag & Drop)</h2>
+          </div>
+          <div class="attempt-badge" id="attemptBadge0">Спроб: 0</div>
+        </div>
+
+        <div class="helper-hint">
+          💡 <strong>Як працювати (ПК та смартфон):</strong> Перетягни картку у відповідну колонку <em>або</em> натисни на картку, а потім натисни на потрібну категорію. Щоб повернути картку назад — натисни на неї у колонці.
+        </div>
+
+        <div id="dndBank0" class="dnd-bank" ondragover="allowDrop(event)" ondrop="dropToBank(event)"></div>
+
+        <div class="dnd-zones">
+          <div class="drop-zone" data-cat="conditions" ondragover="allowDrop(event)" ondrop="dropToZone(event, 'conditions')" onclick="tapZone('conditions')">
+            <div class="drop-zone-title"><span>💼 Умови та оплата</span><small>Conditions & Pay</small></div>
+            <div class="zone-items" id="zone-conditions"></div>
+          </div>
+          <div class="drop-zone" data-cat="qualities" ondragover="allowDrop(event)" ondrop="dropToZone(event, 'qualities')" onclick="tapZone('qualities')">
+            <div class="drop-zone-title"><span>🌟 Якості працівника</span><small>Personal Qualities</small></div>
+            <div class="zone-items" id="zone-qualities"></div>
+          </div>
+          <div class="drop-zone" data-cat="actions" ondragover="allowDrop(event)" ondrop="dropToZone(event, 'actions')" onclick="tapZone('actions')">
+            <div class="drop-zone-title"><span>🚀 Кар'єрні дії</span><small>Career Actions</small></div>
+            <div class="zone-items" id="zone-actions"></div>
+          </div>
+        </div>
+
+        <div id="feedback0" class="feedback-box"></div>
+
+        <div class="task-actions">
+          <button type="button" class="btn btn-primary" onclick="checkTask1()">Перевірити відповіді</button>
+          <button type="button" class="btn btn-outline" onclick="resetTask1()">Скинути картки</button>
+          <button type="button" class="btn btn-accent" onclick="switchTab(1)">Далі: Завдання 2 →</button>
+        </div>
+      </article>
+
+      <!-- TASK 2: SECOND CONDITIONAL DRAG & DROP GAP FILL -->
+      <article id="panel1" class="task-panel">
+        <div class="task-header">
+          <div>
+            <span class="task-tag">Focus 2 • Unit 6.2 Grammar: Second Conditional</span>
+            <h2>2. Умовні речення 2-го типу (Drag & Drop у пропуски)</h2>
+          </div>
+          <div class="attempt-badge" id="attemptBadge1">Спроб: 0</div>
+        </div>
+
+        <div class="helper-hint">
+          💡 Перетягни правильну дієслівну форму в пропуск (або торкнися слова у банку, а потім — порожнього прямокутника в реченні). Пригадай формулу: <strong>If + Past Simple, ... would + Infinitive</strong>.
+        </div>
+
+        <div id="dndBank1" class="dnd-bank"></div>
+
+        <div class="gap-list" id="gapList1"></div>
+
+        <div id="feedback1" class="feedback-box"></div>
+
+        <div class="task-actions">
+          <button type="button" class="btn btn-primary" onclick="checkTask2()">Перевірити граматику</button>
+          <button type="button" class="btn btn-outline" onclick="resetTask2()">Очистити пропуски</button>
+          <button type="button" class="btn btn-accent" onclick="switchTab(2)">Далі: Симуляція →</button>
+        </div>
+      </article>
+
+      <!-- TASK 3: INTERACTIVE JOB INTERVIEW SIMULATION -->
+      <article id="panel2" class="task-panel">
+        <div class="task-header">
+          <div>
+            <span class="task-tag">Focus 2 • Unit 6.6 Speaking & Career Simulation</span>
+            <h2>3. Симуляція співбесіди: Junior UX/UI & Content Assistant</h2>
+          </div>
+          <div class="attempt-badge" id="attemptBadge2">Спроб: 0</div>
+        </div>
+
+        <div class="helper-hint">
+          🎯 Ти проходиш онлайн-співбесіду в міжнародній IT-компанії <strong>BrightFuture Studio</strong>. Обирай найбільш професійні та граматично точні репліки рівня B1/B1+ (Focus 2).
+        </div>
+
+        <div class="sim-chat-box">
+          <div class="hr-profile">
+            <div class="hr-avatar">HR</div>
+            <div>
+              <div style="font-weight:700; font-size:0.98rem;">Sarah Jenkins — Talent Acquisition Manager</div>
+              <div class="sim-stage-indicator" id="simStageLabel">Етап 1 із 5</div>
+            </div>
+          </div>
+
+          <div class="sim-dialogue" id="simQuestionText"></div>
+          <div class="sim-options" id="simOptionsBox"></div>
+          <div class="sim-feedback" id="simInstantFeedback"></div>
+        </div>
+
+        <div id="feedback2" class="feedback-box"></div>
+
+        <div class="task-actions">
+          <button type="button" class="btn btn-outline" onclick="restartSimulation()">Пройти співбесіду заново (нова спроба)</button>
+          <button type="button" class="btn btn-accent" onclick="switchTab(3)">Далі: Завдання 4 →</button>
+        </div>
+      </article>
+
+      <!-- TASK 4: COLLOCATIONS, PREPOSITIONS & JOB VS WORK -->
+      <article id="panel3" class="task-panel">
+        <div class="task-header">
+          <div>
+            <span class="task-tag">Focus 2 • Unit 6.3 & 6.5 Use of English</span>
+            <h2>4. Словосполучення: <em>job / work</em> та прийменники</h2>
+          </div>
+          <div class="attempt-badge" id="attemptBadge3">Спроб: 0</div>
+        </div>
+
+        <div id="quizList3"></div>
+
+        <div id="feedback3" class="feedback-box"></div>
+
+        <div class="task-actions">
+          <button type="button" class="btn btn-primary" onclick="checkTask4()">Перевірити тест</button>
+          <button type="button" class="btn btn-accent" onclick="scrollToReport()">Перейти до PDF-звіту ↓</button>
+        </div>
+      </article>
+
+      <!-- LIVE PROGRESS LOG & PDF DOWNLOAD SECTION -->
+      <section id="reportSection" class="report-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <span class="task-tag" style="background:var(--primary-light); color:var(--primary-dark);">Журнал результатів учня</span>
+            <h2 style="font-size:1.35rem;">Проміжні результати та фіксація спроб</h2>
+          </div>
+          <button type="button" class="btn btn-accent" onclick="downloadPDFReport()">
+            📄 Завантажити PDF-звіт на комп'ютер
+          </button>
+        </div>
+
+        <div class="summary-stats">
+          <div class="stat-box">
+            <div class="stat-val" id="statTotalScore">0 / 24</div>
+            <div class="stat-lbl">Найкращий результат</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="statTotalAttempts">0</div>
+            <div class="stat-lbl">Усього зафіксовано спроб</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="statGrade12">1 бал</div>
+            <div class="stat-lbl">Орієнтовна оцінка (12-бальна)</div>
+          </div>
+        </div>
+
+        <h3 style="font-size:1rem; margin-bottom:8px;">Хронологія усіх спроб (проміжні результати):</h3>
+        <div class="history-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Час</th>
+                <th>Завдання</th>
+                <th>Спроба №</th>
+                <th>Результат</th>
+                <th>Статус</th>
+              </tr>
+            </thead>
+            <tbody id="attemptLogBody">
+              <tr>
+                <td colspan="6" style="text-align:center; color:#64748b;">Поки що немає зафіксованих спроб. Виконай будь-яке завдання та натисни «Перевірити».</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    // ==========================================
+    // STATE & DATA (Focus 2, Unit 6: Work)
+    // ==========================================
+    const state = {
+      studentName: '',
+      studentClass: '',
+      startTime: null,
+      bestScores: [0, 0, 0, 0],
+      maxScores: [9, 5, 5, 5],
+      attemptsCount: [0, 0, 0, 0],
+      attemptHistory: [] // { index, time, taskName, attemptNo, score, max, percent, details }
+    };
+
+    // Task 1 Data: Focus 2 Unit 6 Vocabulary
+    const t1Items = [
+      { id: 'w1', text: 'earn a high salary', cat: 'conditions' },
+      { id: 'w2', text: 'work long hours', cat: 'conditions' },
+      { id: 'w3', text: 'paid holidays', cat: 'conditions' },
+      { id: 'w4', text: 'reliable & punctual', cat: 'qualities' },
+      { id: 'w5', text: 'creative problem-solver', cat: 'qualities' },
+      { id: 'w6', text: 'good team player', cat: 'qualities' },
+      { id: 'w7', text: 'apply for a job', cat: 'actions' },
+      { id: 'w8', text: 'get promoted', cat: 'actions' },
+      { id: 'w9', text: 'resign from a post', cat: 'actions' }
+    ];
+    let selectedChipId = null;
+
+    // Task 2 Data: Second Conditional
+    const t2Words = ['would apply', 'offered', 'worked', 'wouldn’t be', 'had'];
+    const t2Sentences = [
+      { id: 's1', before: 'If I ', blank: 'had', after: ' more work experience, I would get that manager position.' },
+      { id: 's2', before: 'She ', blank: 'would apply', after: ' for the job in London if her English were fluent.' },
+      { id: 's3', before: 'If they ', blank: 'offered', after: ' me a part-time contract, I would accept it immediately.' },
+      { id: 's4', before: 'He ', blank: 'wouldn’t be', after: ' so stressed if he didn’t work overtime every single day.' },
+      { id: 's5', before: 'What would you do if you ', blank: 'worked', after: ' from home all year?' }
+    ];
+    let selectedBank2Word = null;
+    let t2UserAnswers = [null, null, null, null, null];
+
+    // Task 3 Data: Job Interview Simulation
+    const simSteps = [
+      {
+        question: '“Hello! Thank you for joining us today. To start off, why did you decide to apply for this position at BrightFuture Studio?”',
+        options: [
+          { text: 'I want money and my parents told me I must find a summer job right now.', score: 0, note: 'Надто неформально. На співбесіді варто підкреслювати мотивацію та навички.' },
+          { text: 'I’m passionate about digital design, and I believe this role matches my creative skills and desire to learn in a team.', score: 1, note: 'Чудово! Професійна лексика Unit 6: passionate about, matches my skills.' },
+          { text: 'Because I don’t like studying at school and I want to work full-time instead.', score: 0, note: 'Негативний фокус. Роботодавці цінують позитивну мотивацію.' }
+        ]
+      },
+      {
+        question: '“That’s great to hear. How would you describe your main personal strengths when working under pressure?”',
+        options: [
+          { text: 'I am reliable, well-organised, and I always meet deadlines even when tasks are challenging.', score: 1, note: 'Ідеально! Ключові прикметники з Focus 2 Unit 6: reliable, well-organised, meet deadlines.' },
+          { text: 'Sometimes I forget things, so I usually ask my colleagues to do my part of the work.', score: 0, note: 'Це свідчить про брак відповідальності.' },
+          { text: 'I never feel pressure because I never care about the final result.', score: 0, note: 'Байдужість до результату — поганий сигнал для HR.' }
+        ]
+      },
+      {
+        question: '“Imagine a client isn’t satisfied with your design draft. What would you do in that situation?”',
+        options: [
+          { text: 'If a client wasn’t happy, I will argue with them until they agree.', score: 0, note: 'Граматична помилка (змішано 2-й і 1-й тип умовних речень) + конфліктна поведінка.' },
+          { text: 'If a client weren’t satisfied, I would listen carefully to their feedback and offer improved solutions.', score: 1, note: 'Бездоганний Second Conditional (If + Past Simple, would + Infinitive) та клієнтоорієнтованість!' },
+          { text: 'I would resign immediately because criticism makes me angry.', score: 0, note: 'Звільнятися через фідбек — неконструктивно.' }
+        ]
+      },
+      {
+        question: '“Are you looking for full-time or part-time employment during the academic year?”',
+        options: [
+          { text: 'Since I’m in Grade 10, I’m looking for a part-time position with flexible hours so I can balance school and work.', score: 1, note: 'Точне використання термінів: part-time position, flexible hours.' },
+          { text: 'I want to work 60 hours a week and earn a huge salary from tomorrow.', score: 0, note: 'Нереалістичні очікування для школяра.' },
+          { text: 'I don’t mind working for free forever without any contract.', score: 0, note: 'Офіційне працевлаштування завжди передбачає контракт.' }
+        ]
+      },
+      {
+        question: '“Finally, do you have any questions for us about the company or the role?”',
+        options: [
+          { text: 'No, nothing at all. Can I go home now?', score: 0, note: 'Відсутність запитань знижує враження про зацікавленість кандидата.' },
+          { text: 'Yes! Could you tell me what opportunities for training and teamwork a new intern has during the first month?', score: 1, note: 'Блискуче завершення співбесіди! Використано opportunities for training.' },
+          { text: 'How many paid holidays can I take next week?', score: 0, note: 'Запитувати про відпустку на першому тижні роботи недоречно.' }
+        ]
+      }
+    ];
+    let simCurrentStep = 0;
+    let simCurrentScore = 0;
+    let simStepAnswered = false;
+
+    // Task 4 Data: Focus 2 Use of English (job vs work, prepositions)
+    const t4Questions = [
+      {
+        q: '1. My older brother has just found a well-paid ___ in an engineering firm.',
+        options: ['work', 'job', 'career'],
+        correct: 1
+      },
+      {
+        q: '2. Our teacher is responsible ___ organising the school career fair.',
+        options: ['for', 'about', 'with'],
+        correct: 0
+      },
+      {
+        q: '3. Many IT specialists prefer working ___ home at least twice a week.',
+        options: ['in', 'at', 'from'],
+        correct: 2
+      },
+      {
+        q: '4. She has a lot of ___ to finish before Friday’s presentation.',
+        options: ['job', 'jobs', 'work'],
+        correct: 2
+      },
+      {
+        q: '5. Over 200 candidates applied ___ the position of junior marketing assistant.',
+        options: ['to', 'for', 'on'],
+        correct: 1
+      }
+    ];
+    let t4UserChoices = [null, null, null, null, null];
+
+    // ==========================================
+    // INITIALIZATION & REGISTRATION
+    // ==========================================
+    document.getElementById('regForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nameVal = document.getElementById('studentName').value.trim();
+      const classVal = document.getElementById('studentClass').value;
+      if (!nameVal || !classVal) return;
+
+      state.studentName = nameVal;
+      state.studentClass = classVal;
+      state.startTime = new Date();
+
+      document.getElementById('pillName').textContent = state.studentName;
+      document.getElementById('pillClass').textContent = state.studentClass;
+      document.getElementById('studentPill').classList.add('visible');
+
+      document.getElementById('registrationSection').style.display = 'none';
+      document.getElementById('workspaceSection').classList.add('active');
+
+      initTask1();
+      initTask2();
+      initTask3();
+      initTask4();
+      updateDashboard();
+    });
+
+    function switchTab(idx) {
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === idx);
+      });
+      document.querySelectorAll('.task-panel').forEach((panel, i) => {
+        panel.classList.toggle('active', i === idx);
+      });
+    }
+
+    function scrollToReport() {
+      document.getElementById('reportSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // LOGGING ATTEMPTS & PROGRESS
+    // ==========================================
+    function logAttempt(taskIdx, taskTitle, score, maxScore, details) {
+      state.attemptsCount[taskIdx]++;
+      if (score > state.bestScores[taskIdx]) {
+        state.bestScores[taskIdx] = score;
+      }
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const pct = Math.round((score / maxScore) * 100);
+
+      state.attemptHistory.push({
+        index: state.attemptHistory.length + 1,
+        time: timeStr,
+        taskName: taskTitle,
+        attemptNo: state.attemptsCount[taskIdx],
+        score: score,
+        max: maxScore,
+        percent: pct,
+        details: details
+      });
+
+      document.getElementById(`attemptBadge${taskIdx}`).textContent = `Спроб: ${state.attemptsCount[taskIdx]}`;
+      updateDashboard();
+    }
+
+    function updateDashboard() {
+      const totalBest = state.bestScores.reduce((a, b) => a + b, 0);
+      const totalMax = state.maxScores.reduce((a, b) => a + b, 0);
+      const totalPct = Math.round((totalBest / totalMax) * 100);
+      const totalAttempts = state.attemptsCount.reduce((a, b) => a + b, 0);
+
+      document.getElementById('overallScoreText').textContent = `${totalBest} / ${totalMax} балів (${totalPct}%)`;
+      document.getElementById('overallProgressBar').style.width = `${totalPct}%`;
+
+      document.getElementById('statTotalScore').textContent = `${totalBest} / ${totalMax}`;
+      document.getElementById('statTotalAttempts').textContent = totalAttempts;
+
+      // Convert percentage to Ukrainian 12-point scale
+      const grade12 = Math.max(1, Math.round((totalBest / totalMax) * 12));
+      document.getElementById('statGrade12').textContent = `${grade12} / 12`;
+
+      for (let i = 0; i < 4; i++) {
+        document.getElementById(`tabScore${i}`).textContent = `Спроб: ${state.attemptsCount[i]} • ${state.bestScores[i]}/${state.maxScores[i]}`;
+        const tabBtn = document.querySelector(`.tab-btn[data-tab="${i}"]`);
+        if (state.bestScores[i] === state.maxScores[i]) {
+          tabBtn.classList.add('completed');
+        }
+      }
+
+      // Render history rows
+      const tbody = document.getElementById('attemptLogBody');
+      if (state.attemptHistory.length === 0) return;
+
+      tbody.innerHTML = state.attemptHistory.map(item => `
+        <tr>
+          <td>${item.index}</td>
+          <td>${item.time}</td>
+          <td><strong>${item.taskName}</strong></td>
+          <td>Спроба #${item.attemptNo}</td>
+          <td><strong>${item.score} / ${item.max}</strong> (${item.percent}%)</td>
+          <td>${item.percent >= 80 ? '✅ Відмінно' : item.percent >= 50 ? '⚠️ Добре, можна покращити' : '🔄 Потрібна практика'}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ==========================================
+    // TASK 1: DRAG & DROP VOCABULARY
+    // ==========================================
+    function initTask1() {
+      const bank = document.getElementById('dndBank0');
+      bank.innerHTML = '';
+      ['conditions', 'qualities', 'actions'].forEach(cat => {
+        document.getElementById(`zone-${cat}`).innerHTML = '';
+      });
+
+      const shuffled = [...t1Items].sort(() => Math.random() - 0.5);
+      shuffled.forEach(item => {
+        const chip = document.createElement('div');
+        chip.className = 'drag-chip';
+        chip.id = item.id;
+        chip.textContent = item.text;
+        chip.draggable = true;
+        chip.dataset.cat = item.cat;
+
+        chip.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', item.id);
+        });
+
+        chip.addEventListener('click', e => {
+          e.stopPropagation();
+          // If chip is already inside a drop zone, clicking returns it to bank
+          if (chip.parentElement.classList.contains('zone-items')) {
+            chip.classList.remove('chip-correct', 'chip-wrong', 'selected-chip');
+            bank.appendChild(chip);
+            selectedChipId = null;
+            return;
+          }
+          // Toggle selection for tap-to-place on mobile
+          document.querySelectorAll('#dndBank0 .drag-chip').forEach(c => c.classList.remove('selected-chip'));
+          if (selectedChipId === item.id) {
+            selectedChipId = null;
+          } else {
+            selectedChipId = item.id;
+            chip.classList.add('selected-chip');
+          }
+        });
+
+        bank.appendChild(chip);
+      });
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+    }
+
+    function dropToZone(e, cat) {
+      e.preventDefault();
+      const id = e.dataTransfer.getData('text/plain');
+      const chip = document.getElementById(id);
+      if (chip) {
+        chip.classList.remove('selected-chip', 'chip-correct', 'chip-wrong');
+        document.getElementById(`zone-${cat}`).appendChild(chip);
+        selectedChipId = null;
+      }
+    }
+
+    function dropToBank(e) {
+      e.preventDefault();
+      const id = e.dataTransfer.getData('text/plain');
+      const chip = document.getElementById(id);
+      if (chip) {
+        chip.classList.remove('selected-chip', 'chip-correct', 'chip-wrong');
+        document.getElementById('dndBank0').appendChild(chip);
+        selectedChipId = null;
+      }
+    }
+
+    function tapZone(cat) {
+      if (!selectedChipId) return;
+      const chip = document.getElementById(selectedChipId);
+      if (chip) {
+        chip.classList.remove('selected-chip', 'chip-correct', 'chip-wrong');
+        document.getElementById(`zone-${cat}`).appendChild(chip);
+        selectedChipId = null;
+      }
+    }
+
+    function checkTask1() {
+      let correctCount = 0;
+      ['conditions', 'qualities', 'actions'].forEach(cat => {
+        const zone = document.getElementById(`zone-${cat}`);
+        Array.from(zone.children).forEach(chip => {
+          chip.classList.remove('chip-correct', 'chip-wrong');
+          if (chip.dataset.cat === cat) {
+            chip.classList.add('chip-correct');
+            correctCount++;
+          } else {
+            chip.classList.add('chip-wrong');
+          }
+        });
+      });
+
+      const fb = document.getElementById('feedback0');
+      if (correctCount === t1Items.length) {
+        fb.className = 'feedback-box success';
+        fb.textContent = `🎉 Блискуче! Усі ${correctCount} з ${t1Items.length} слів розподілено правильно!`;
+      } else {
+        fb.className = 'feedback-box warning';
+        fb.textContent = `Результат спроби: ${correctCount} із ${t1Items.length}. Червоні картки розміщено не в тій категорії — натисни на них, щоб повернути в банк, і спробуй ще раз.`;
+      }
+
+      logAttempt(0, 'Завдання 1: Work Vocabulary (Drag & Drop)', correctCount, t1Items.length, `Правильно розподілено ${correctCount}/${t1Items.length}`);
+    }
+
+    function resetTask1() {
+      document.getElementById('feedback0').className = 'feedback-box';
+      selectedChipId = null;
+      initTask1();
+    }
+
+    // ==========================================
+    // TASK 2: SECOND CONDITIONAL DRAG & DROP
+    // ==========================================
+    function initTask2() {
+      t2UserAnswers = [null, null, null, null, null];
+      selectedBank2Word = null;
+      renderTask2();
+    }
+
+    function renderTask2() {
+      const bank = document.getElementById('dndBank1');
+      bank.innerHTML = '';
+
+      t2Words.forEach(word => {
+        const used = t2UserAnswers.includes(word);
+        if (used) return;
+        const chip = document.createElement('div');
+        chip.className = 'drag-chip' + (selectedBank2Word === word ? ' selected-chip' : '');
+        chip.textContent = word;
+        chip.draggable = true;
+
+        chip.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', word);
+        });
+
+        chip.addEventListener('click', () => {
+          selectedBank2Word = (selectedBank2Word === word) ? null : word;
+          renderTask2();
+        });
+
+        bank.appendChild(chip);
+      });
+
+      const list = document.getElementById('gapList1');
+      list.innerHTML = '';
+      t2Sentences.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'gap-row';
+
+        const slot = document.createElement('span');
+        slot.className = 'gap-slot' + (t2UserAnswers[idx] ? ' filled' : '');
+        slot.textContent = t2UserAnswers[idx] || 'перетягни / натисни';
+
+        slot.addEventListener('dragover', e => e.preventDefault());
+        slot.addEventListener('drop', e => {
+          e.preventDefault();
+          const droppedWord = e.dataTransfer.getData('text/plain');
+          if (t2Words.includes(droppedWord)) {
+            t2UserAnswers[idx] = droppedWord;
+            selectedBank2Word = null;
+            renderTask2();
+          }
+        });
+
+        slot.addEventListener('click', () => {
+          if (selectedBank2Word) {
+            t2UserAnswers[idx] = selectedBank2Word;
+            selectedBank2Word = null;
+            renderTask2();
+          } else if (t2UserAnswers[idx]) {
+            t2UserAnswers[idx] = null;
+            renderTask2();
+          }
+        });
+
+        row.append(`${idx + 1}. ${item.before}`, slot, item.after);
+        list.appendChild(row);
+      });
+    }
+
+    function checkTask2() {
+      let score = 0;
+      const slots = document.querySelectorAll('#gapList1 .gap-slot');
+      t2Sentences.forEach((item, idx) => {
+        slots[idx].classList.remove('slot-correct', 'slot-wrong');
+        if (t2UserAnswers[idx] === item.blank) {
+          slots[idx].classList.add('slot-correct');
+          score++;
+        } else {
+          slots[idx].classList.add('slot-wrong');
+        }
+      });
+
+      const fb = document.getElementById('feedback1');
+      if (score === t2Sentences.length) {
+        fb.className = 'feedback-box success';
+        fb.textContent = `✅ Супер! Усі ${score}/5 форм Second Conditional вжито бездоганно!`;
+      } else {
+        fb.className = 'feedback-box warning';
+        fb.textContent = `Зафіксовано ${score} із 5 правильних відповідей. Натисни на помилковий пропуск, щоб звільнити його та виправити.`;
+      }
+
+      logAttempt(1, 'Завдання 2: Second Conditional (Drag & Drop)', score, t2Sentences.length, `Граматика: ${score}/5`);
+    }
+
+    function resetTask2() {
+      document.getElementById('feedback1').className = 'feedback-box';
+      initTask2();
+    }
+
+    // ==========================================
+    // TASK 3: JOB INTERVIEW SIMULATION
+    // ==========================================
+    function initTask3() {
+      simCurrentStep = 0;
+      simCurrentScore = 0;
+      simStepAnswered = false;
+      renderSimStep();
+    }
+
+    function renderSimStep() {
+      const step = simSteps[simCurrentStep];
+      document.getElementById('simStageLabel').textContent = `Етап ${simCurrentStep + 1} із ${simSteps.length} • Поточний рахунок симуляції: ${simCurrentScore}`;
+      document.getElementById('simQuestionText').textContent = step.question;
+
+      const fb = document.getElementById('simInstantFeedback');
+      fb.style.display = 'none';
+
+      const optBox = document.getElementById('simOptionsBox');
+      optBox.innerHTML = '';
+
+      step.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'sim-option-btn';
+        btn.textContent = opt.text;
+        btn.onclick = () => handleSimChoice(i, btn);
+        optBox.appendChild(btn);
+      });
+    }
+
+    function handleSimChoice(optIdx, btnEl) {
+      if (simStepAnswered) return;
+      simStepAnswered = true;
+
+      const step = simSteps[simCurrentStep];
+      const chosen = step.options[optIdx];
+      simCurrentScore += chosen.score;
+
+      const fb = document.getElementById('simInstantFeedback');
+      fb.style.display = 'block';
+      if (chosen.score === 1) {
+        btnEl.style.borderColor = '#22c55e';
+        btnEl.style.background = 'rgba(34, 197, 94, 0.25)';
+        fb.style.background = 'rgba(34, 197, 94, 0.2)';
+        fb.style.color = '#bbf7d0';
+        fb.innerHTML = `<strong>HR-коментар:</strong> ${chosen.note}`;
+      } else {
+        btnEl.style.borderColor = '#ef4444';
+        btnEl.style.background = 'rgba(239, 68, 68, 0.25)';
+        fb.style.background = 'rgba(239, 68, 68, 0.2)';
+        fb.style.color = '#fecaca';
+        fb.innerHTML = `<strong>HR-коментар:</strong> ${chosen.note}`;
+      }
+
+      // Next button
+      const nextBtn = document.createElement('button');
+      nextBtn.type = 'button';
+      nextBtn.className = 'btn btn-accent';
+      nextBtn.style.marginTop = '12px';
+      nextBtn.textContent = (simCurrentStep < simSteps.length - 1) ? 'Наступне питання інтерв’ю →' : 'Завершити співбесіду та зафіксувати результат';
+      nextBtn.onclick = () => {
+        if (simCurrentStep < simSteps.length - 1) {
+          simCurrentStep++;
+          simStepAnswered = false;
+          renderSimStep();
+        } else {
+          finishSimulation();
+        }
+      };
+      fb.appendChild(document.createElement('br'));
+      fb.appendChild(nextBtn);
+    }
+
+    function finishSimulation() {
+      const fbMain = document.getElementById('feedback2');
+      if (simCurrentScore >= 4) {
+        fbMain.className = 'feedback-box success';
+        fbMain.textContent = `🎉 Вітаємо! Ви успішно пройшли співбесіду з результатом ${simCurrentScore} / ${simSteps.length} і отримали офер!`;
+      } else {
+        fbMain.className = 'feedback-box warning';
+        fbMain.textContent = `Співбесіду завершено з результатом ${simCurrentScore} / ${simSteps.length}. Спробуй пройти симуляцію ще раз, щоб отримати максимальний бал!`;
+      }
+
+      logAttempt(2, 'Завдання 3: Job Interview Simulation', simCurrentScore, simSteps.length, `Офер-рейтинг: ${simCurrentScore}/${simSteps.length}`);
+    }
+
+    function restartSimulation() {
+      document.getElementById('feedback2').className = 'feedback-box';
+      initTask3();
+    }
+
+    // ==========================================
+    // TASK 4: USE OF ENGLISH (JOB VS WORK & PREPS)
+    // ==========================================
+    function initTask4() {
+      const list = document.getElementById('quizList3');
+      list.innerHTML = '';
+
+      t4Questions.forEach((item, qIdx) => {
+        const card = document.createElement('div');
+        card.className = 'quiz-item';
+
+        const qTitle = document.createElement('div');
+        qTitle.className = 'quiz-q';
+        qTitle.textContent = item.q;
+
+        const optsWrap = document.createElement('div');
+        optsWrap.className = 'quiz-opts';
+
+        item.options.forEach((optText, oIdx) => {
+          const pill = document.createElement('button');
+          pill.type = 'button';
+          pill.className = 'pill-radio';
+          pill.textContent = optText;
+          pill.dataset.q = qIdx;
+          pill.dataset.o = oIdx;
+
+          pill.onclick = () => {
+            t4UserChoices[qIdx] = oIdx;
+            optsWrap.querySelectorAll('.pill-radio').forEach(p => p.classList.remove('active', 'correct-opt', 'wrong-opt'));
+            pill.classList.add('active');
+          };
+
+          optsWrap.appendChild(pill);
+        });
+
+        card.append(qTitle, optsWrap);
+        list.appendChild(card);
+      });
+    }
+
+    function checkTask4() {
+      let score = 0;
+      t4Questions.forEach((item, qIdx) => {
+        const pills = document.querySelectorAll(`.pill-radio[data-q="${qIdx}"]`);
+        pills.forEach((pill, oIdx) => {
+          pill.classList.remove('correct-opt', 'wrong-opt');
+          if (t4UserChoices[qIdx] === oIdx) {
+            if (oIdx === item.correct) {
+              pill.classList.add('correct-opt');
+              score++;
+            } else {
+              pill.classList.add('wrong-opt');
+            }
+          }
+        });
+      });
+
+      const fb = document.getElementById('feedback3');
+      if (score === t4Questions.length) {
+        fb.className = 'feedback-box success';
+        fb.textContent = `🏆 Бездоганно! ${score} із ${t4Questions.length} правильних відповідей!`;
+      } else {
+        fb.className = 'feedback-box warning';
+        fb.textContent = `Ваш результат: ${score} із ${t4Questions.length}. Пам’ятай: "job" — злічуваний іменник (a job), а "work" — незлічуваний.`;
+      }
+
+      logAttempt(3, 'Завдання 4: Job vs Work & Prepositions', score, t4Questions.length, `Use of English: ${score}/5`);
+    }
+
+    // ==========================================
+    // PDF REPORT GENERATION (Client-Side Download)
+    // ==========================================
+    function downloadPDFReport() {
+      const totalBest = state.bestScores.reduce((a, b) => a + b, 0);
+      const totalMax = state.maxScores.reduce((a, b) => a + b, 0);
+      const totalPct = Math.round((totalBest / totalMax) * 100);
+      const grade12 = Math.max(1, Math.round((totalBest / totalMax) * 12));
+      const generatedAt = new Date().toLocaleString('uk-UA');
+
+      const taskNames = [
+        '1. Work Vocabulary (Drag & Drop)',
+        '2. Second Conditional (Drag & Drop)',
+        '3. Job Interview Simulation',
+        '4. Job vs Work & Prepositions'
+      ];
+
+      const summaryRows = taskNames.map((name, i) => `
+        <tr>
+          <td style="padding:8px; border:1px solid #cbd5e1;">${name}</td>
+          <td style="padding:8px; border:1px solid #cbd5e1; text-align:center;">${state.attemptsCount[i]}</td>
+          <td style="padding:8px; border:1px solid #cbd5e1; text-align:center;"><strong>${state.bestScores[i]} / ${state.maxScores[i]}</strong></td>
+          <td style="padding:8px; border:1px solid #cbd5e1; text-align:center;">${Math.round((state.bestScores[i]/state.maxScores[i])*100)}%</td>
+        </tr>
+      `).join('');
+
+      const historyRows = state.attemptHistory.length > 0
+        ? state.attemptHistory.map(h => `
+            <tr>
+              <td style="padding:6px 8px; border:1px solid #cbd5e1;">${h.index}</td>
+              <td style="padding:6px 8px; border:1px solid #cbd5e1;">${h.time}</td>
+              <td style="padding:6px 8px; border:1px solid #cbd5e1;">${h.taskName}</td>
+              <td style="padding:6px 8px; border:1px solid #cbd5e1; text-align:center;">#${h.attemptNo}</td>
+              <td style="padding:6px 8px; border:1px solid #cbd5e1; text-align:center;">${h.score}/${h.max} (${h.percent}%)</td>
+            </tr>
+          `).join('')
+        : `<tr><td colspan="5" style="padding:8px; border:1px solid #cbd5e1; text-align:center;">Спроб ще не зафіксовано</td></tr>`;
+
+      const container = document.createElement('div');
+      container.innerHTML = `
+        <div id="pdf-export-sheet">
+          <div style="border-bottom:3px solid #0f766e; padding-bottom:14px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:11px; font-weight:700; color:#0f766e; text-transform:uppercase;">Англійська мова • 10 клас • Focus 2 (Unit 6: Work)</div>
+              <h1 style="font-size:20px; margin:4px 0 0 0; color:#0f172a;">Звіт про виконання інтерактивних завдань</h1>
+            </div>
+            <div style="text-align:right; font-size:11px; color:#475569;">
+              Сформовано:<br><strong>${generatedAt}</strong>
+            </div>
+          </div>
+
+          <div style="background:#f1f5f9; padding:14px; border-radius:8px; margin-bottom:18px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <div><span style="color:#475569; font-size:12px;">Учень / Учениця:</span><br><strong style="font-size:15px;">${state.studentName}</strong></div>
+            <div><span style="color:#475569; font-size:12px;">Клас:</span><br><strong style="font-size:15px;">${state.studentClass}</strong></div>
+            <div><span style="color:#475569; font-size:12px;">Підсумковий бал:</span><br><strong style="font-size:15px; color:#0f766e;">${totalBest} / ${totalMax} (${totalPct}%)</strong></div>
+            <div><span style="color:#475569; font-size:12px;">Оцінка (12-б):</span><br><strong style="font-size:15px; color:#f97316;">${grade12} балів</strong></div>
+          </div>
+
+          <h2 style="font-size:14px; margin-bottom:8px; color:#0f172a;">1. Зведена таблиця результатів за розділами Unit 6</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:20px;">
+            <thead>
+              <tr style="background:#0f172a; color:#ffffff;">
+                <th style="padding:8px; border:1px solid #0f172a; text-align:left;">Інтерактивний модуль</th>
+                <th style="padding:8px; border:1px solid #0f172a; text-align:center;">К-сть спроб</th>
+                <th style="padding:8px; border:1px solid #0f172a; text-align:center;">Найкращий бал</th>
+                <th style="padding:8px; border:1px solid #0f172a; text-align:center;">Успішність</th>
+              </tr>
+            </thead>
+            <tbody>${summaryRows}</tbody>
+          </table>
+
+          <h2 style="font-size:14px; margin-bottom:8px; color:#0f172a;">2. Детальний журнал усіх спроб та проміжних результатів</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:11px;">
+            <thead>
+              <tr style="background:#e2e8f0; color:#0f172a;">
+                <th style="padding:6px 8px; border:1px solid #cbd5e1; text-align:left;">№</th>
+                <th style="padding:6px 8px; border:1px solid #cbd5e1; text-align:left;">Час фіксації</th>
+                <th style="padding:6px 8px; border:1px solid #cbd5e1; text-align:left;">Завдання</th>
+                <th style="padding:6px 8px; border:1px solid #cbd5e1; text-align:center;">Спроба</th>
+                <th style="padding:6px 8px; border:1px solid #cbd5e1; text-align:center;">Проміжний бал</th>
+              </tr>
+            </thead>
+            <tbody>${historyRows}</tbody>
+          </table>
+
+          <div style="margin-top:22px; padding-top:10px; border-top:1px solid #cbd5e1; font-size:10px; color:#64748b; display:flex; justify-content:space-between;">
+            <span>Focus 2 • Unit 6: Just the Job! (Grade 10 Digital Lab)</span>
+            <span>Підпис вчителя: _______________________</span>
+          </div>
+        </div>
+      `;
+
+      const safeName = state.studentName.replace(/[^a-zA-Zа-яА-ЯіІїЇєЄ0-9_-]/g, '_');
+      const fileName = `Focus2_Unit6_${state.studentClass}_${safeName}.pdf`;
+
+      const opt = {
+        margin: 10,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(container.firstElementChild).save();
+    }
+  </script>
+</body>
+</html>
